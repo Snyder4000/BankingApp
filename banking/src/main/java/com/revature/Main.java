@@ -1,15 +1,32 @@
 package com.revature;
 
+import com.revature.controller.UserController;
+import com.revature.repository.SqliteUserDao;
+import com.revature.repository.UserDao;
+import com.revature.service.UserService;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-         /*
-            Registration Steps
-                - user needs to prompt they want to make an account
-                - user needs to provide a username and password
-                - system needs to check the username and password conform to software requirements
-                - system needs to save the credentials if they are valid, or reject them if they are not
-                - user needs to be informed of the results
-         */
-        System.out.println("Hello world!");
+
+        try(Scanner scanner = new Scanner(System.in)){
+            
+            UserDao userDao = new SqliteUserDao();
+            UserService userService = new UserService(userDao);
+            UserController userController = new UserController(scanner, userService);
+            Map<String, String> controlMap = new HashMap<>();
+            controlMap.put("Continue Loop", "true");
+            while(Boolean.parseBoolean(controlMap.get("Continue Loop"))){
+                userController.promptUserForService(controlMap);
+                if(controlMap.containsKey("User")){
+                    System.out.printf("Banking stuff for %s can happen here! Press any key to continue", controlMap.get("User"));
+                    scanner.nextLine();
+                }
+            }
+
+        }
     }
 }
