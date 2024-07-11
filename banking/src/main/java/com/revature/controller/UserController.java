@@ -16,7 +16,7 @@ public class UserController {
     }
 
     public void promptUserForService(Map<String,String> controlMap){
-        System.out.println("What would you like to do?");
+        System.out.println("Welcome to the First World Bank of Faerun! What would you like to do?");
         System.out.println("1. register an account");
         System.out.println("2. login");
         System.out.println("q. quit");
@@ -28,6 +28,7 @@ public class UserController {
                     break;
                 case "2":
                     controlMap.put("User", login().getUsername());
+                    controlMap.put("Logged In", "true");
                     break;
                 case "q":
                     System.out.println("Goodbye!");
@@ -38,6 +39,8 @@ public class UserController {
         }
     }
 
+    
+
     public void registerNewUser(){
         User newCredentials = getUserCredentials();
         User newUser = userService.validateNewCredentials(newCredentials);
@@ -45,14 +48,12 @@ public class UserController {
     }
 
     public User login(){
-        // we can re-use getUserCredentials() here to avoid rewriting the same logic
         return userService.checkLoginCredentials(getUserCredentials());
     }
 
     public User getUserCredentials(){
         String newUsername;
         String newPassword;
-        // user needs to provide a username and password
         System.out.print("Please enter a username: ");
         newUsername = scanner.nextLine();
         System.out.print("Please enter a password: ");

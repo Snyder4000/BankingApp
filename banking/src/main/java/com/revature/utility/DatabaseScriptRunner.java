@@ -13,10 +13,10 @@ public class DatabaseScriptRunner {
     
     public static void main(String[] args) {
         
-        Path sqlPath = Paths.get("src/main/resources/bank_setup_reset_script.sql");
+        Path sqlPath = Paths.get("banking/src/main/resources/bank_setup_reset_script.sql");
+
         try{
             try(
-                    // create our connection object in our try with resources block
                     Connection connection = DatabaseConnector.createConnection();
                     Stream<String> lines = Files.lines(sqlPath)
             ){
@@ -31,10 +31,10 @@ public class DatabaseScriptRunner {
                 }
                 connection.commit();
             }
-        // need to catch potential SQL and IO Exceptions
         } catch (SQLException | IOException exception){
             System.out.println(exception.getMessage());
         }
+        
     }
 
 }

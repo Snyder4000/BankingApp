@@ -11,7 +11,7 @@ import java.util.List;
 public class SqliteUserDao implements UserDao {
     @Override
     public User createUser(User newUserCredentials) {
-        String sql = "insert into user values (?, ?)";
+        String sql = "insert into user(user_name, password) values (?, ?)";
         try(Connection connection = DatabaseConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, newUserCredentials.getUsername());
@@ -35,7 +35,7 @@ public class SqliteUserDao implements UserDao {
             List<User> users = new ArrayList<>();
             while(resultSet.next()){
                 User userRecord = new User();
-                userRecord.setUsername(resultSet.getString("username"));
+                userRecord.setUsername(resultSet.getString("user_name"));
                 userRecord.setPassword(resultSet.getString("password"));
                 users.add(userRecord);
             }
