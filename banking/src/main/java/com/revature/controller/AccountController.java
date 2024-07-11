@@ -47,19 +47,20 @@ public class AccountController {
     }
 
     public void createNewCheckingAccount(int id){
-        Account newAccount = new Account(id, 0, 0, 0);
+        Account newAccount = new Account(id, 0.0f, 0.0f, 0.0f);
+        //System.out.println(newAccount);
         Account acc = service.createNewCheckingAccount(newAccount);
         System.out.printf("New checking account created: %s \n", acc);
     }
 
     public void createNewSavingAccount(int id){
-        Account newAccount = new Account(id, 0, 0, 0);
+        Account newAccount = new Account(id, 0.0f, 0.0f, 0.0f);
         Account acc = service.createNewSavingAccount(newAccount);
-        System.out.printf("New savings account created: %s \n", acc);
+        System.out.printf("New savings account created: %s \n", newAccount);
     }
 
     public void createNewInvestmentAccount(int id){
-        Account newAccount = new Account(id, 0, 0, 0);
+        Account newAccount = new Account(id, 0.0f, 0.0f, 0.0f);
         Account acc = service.createNewInvestmentAccount(newAccount);
         System.out.printf("New investment account created: %s \n", acc);
     }

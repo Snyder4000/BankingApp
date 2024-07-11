@@ -17,8 +17,8 @@ public class SqliteAccountDao implements AccountDao{
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, newAccount.getUserId());
             preparedStatement.setFloat(2, newAccount.getGold());
-            preparedStatement.setFloat(1, newAccount.getSilver());
-            preparedStatement.setFloat(2, newAccount.getCopper());
+            preparedStatement.setFloat(3, newAccount.getSilver());
+            preparedStatement.setFloat(4, newAccount.getCopper());
             int result = preparedStatement.executeUpdate();
             if (result == 1){
                 return newAccount;
@@ -37,8 +37,8 @@ public class SqliteAccountDao implements AccountDao{
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, newAccount.getUserId());
             preparedStatement.setFloat(2, newAccount.getGold());
-            preparedStatement.setFloat(1, newAccount.getSilver());
-            preparedStatement.setFloat(2, newAccount.getCopper());
+            preparedStatement.setFloat(3, newAccount.getSilver());
+            preparedStatement.setFloat(4, newAccount.getCopper());
             int result = preparedStatement.executeUpdate();
             if (result == 1){
                 return newAccount;
@@ -57,8 +57,8 @@ public class SqliteAccountDao implements AccountDao{
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, newAccount.getUserId());
             preparedStatement.setFloat(2, newAccount.getGold());
-            preparedStatement.setFloat(1, newAccount.getSilver());
-            preparedStatement.setFloat(2, newAccount.getCopper());
+            preparedStatement.setFloat(3, newAccount.getSilver());
+            preparedStatement.setFloat(4, newAccount.getCopper());
             int result = preparedStatement.executeUpdate();
             if (result == 1){
                 return newAccount;
@@ -96,7 +96,21 @@ public class SqliteAccountDao implements AccountDao{
     @Override
     public Account getAccountByID(int id) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAccountByID'");
+        String sql = "select * from checking where account_id = ?";
+        try(Connection connection = DatabaseConnector.createConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery(sql);
+            Account accountRecord = new Account();
+            accountRecord.setUserId(resultSet.getInt("user_id"));
+            accountRecord.setGold(resultSet.getFloat("gold"));
+            accountRecord.setSilver(resultSet.getFloat("silver"));
+            accountRecord.setCopper(resultSet.getFloat("copper"));
+            return accountRecord;
+        } catch (SQLException e) {
+            // TODO: handle exception
+            throw new AccountSQLException(e.getMessage());
+        }
     }
 
     @Override

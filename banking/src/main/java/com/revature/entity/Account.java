@@ -67,9 +67,9 @@ public class Account implements Serializable {
     @Override
     public String toString(){
         return "Account{" + 
-                "user_id: " + user_id + '\'' +
-                "gold: " + gold + '\'' + 
-                "silver: " + silver + '\'' +
+                "user_id: " + user_id + ",\n "+
+                "gold: " + gold + ",\n " + 
+                "silver: " + silver + ",\n " +
                 "copper: " + copper +'}';
     }
 }
