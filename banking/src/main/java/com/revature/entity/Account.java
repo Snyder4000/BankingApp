@@ -23,6 +23,10 @@ public class Account implements Serializable {
         return user_id;
     }
 
+    public void setUserId(int id){
+        user_id = id;
+    }
+
     public float getGold(){
         return gold;
     }

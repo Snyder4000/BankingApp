@@ -27,7 +27,9 @@ public class UserController {
                     registerNewUser();
                     break;
                 case "2":
-                    controlMap.put("User", login().getUsername());
+                    User tempUser = login();
+                    controlMap.put("User", tempUser.getUsername());
+                    controlMap.put("User ID", Integer.toString(tempUser.getUserId()));
                     controlMap.put("Logged In", "true");
                     break;
                 case "q":

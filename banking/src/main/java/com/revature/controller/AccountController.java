@@ -26,7 +26,8 @@ public class AccountController {
             String userActionIndicated = scanner.nextLine();
             switch (userActionIndicated) {
                 case "1":
-                    System.out.println("Checking account creations will go here");
+                    System.out.println("Checking account creations will go here, current User ID: " + controlMap.get("User ID"));
+                    createNewCheckingAccount(Integer.parseInt(controlMap.get("User ID")));
                     break;
                 case "2":
                     System.out.println("Checking account balance will go here");
@@ -35,11 +36,31 @@ public class AccountController {
                     System.out.println("Prompts for withdrawl will be placed here");
                     break;
                 case "q":
-                    System.out.printf("Goodbye, %s!", controlMap.get("User"));
+                    System.out.printf("Goodbye, %s!\n", controlMap.get("User"));
+                    controlMap.put("User", "No one logged in");
+                    controlMap.put("User ID", Integer.toString(0));
                     controlMap.put("Logged In", "false");
             }
         } catch(LoginFail exception){
             System.out.println("New custom exception messages will be here!");
         }
+    }
+
+    public void createNewCheckingAccount(int id){
+        Account newAccount = new Account(id, 0, 0, 0);
+        Account acc = service.createNewCheckingAccount(newAccount);
+        System.out.printf("New checking account created: %s \n", acc);
+    }
+
+    public void createNewSavingAccount(int id){
+        Account newAccount = new Account(id, 0, 0, 0);
+        Account acc = service.createNewSavingAccount(newAccount);
+        System.out.printf("New savings account created: %s \n", acc);
+    }
+
+    public void createNewInvestmentAccount(int id){
+        Account newAccount = new Account(id, 0, 0, 0);
+        Account acc = service.createNewInvestmentAccount(newAccount);
+        System.out.printf("New investment account created: %s \n", acc);
     }
 }

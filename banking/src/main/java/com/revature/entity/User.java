@@ -6,12 +6,22 @@ import java.util.Objects;
 public class User implements Serializable{
     private String username;
     private String password;
+    private int userid;
 
     public User(){}
 
     public User(String username, String password){
         this.username = username;
         this.password = password;
+        this.userid = 0;
+    }
+
+    public int getUserId(){
+        return userid;
+    }
+
+    public void setUserId(int id){
+        userid = id;
     }
 
     public String getUsername() {
