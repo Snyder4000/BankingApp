@@ -83,6 +83,7 @@ public class SqliteAccountDao implements AccountDao{
                 accountRecord.setGold(resultSet.getFloat("gold"));
                 accountRecord.setSilver(resultSet.getFloat("silver"));
                 accountRecord.setCopper(resultSet.getFloat("copper"));
+                accountRecord.setAccountID(resultSet.getInt("account_id"));
                 accounts.add(accountRecord);
             }
             return accounts;
@@ -95,44 +96,60 @@ public class SqliteAccountDao implements AccountDao{
 
     @Override
     public Account getAccountByID(int id) {
-        // TODO Auto-generated method stub
         String sql = "select * from checking where account_id = ?";
         try(Connection connection = DatabaseConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
             Account accountRecord = new Account();
             accountRecord.setUserId(resultSet.getInt("user_id"));
             accountRecord.setGold(resultSet.getFloat("gold"));
             accountRecord.setSilver(resultSet.getFloat("silver"));
             accountRecord.setCopper(resultSet.getFloat("copper"));
+            accountRecord.setAccountID(resultSet.getInt("account_id"));
             return accountRecord;
         } catch (SQLException e) {
-            // TODO: handle exception
             throw new AccountSQLException(e.getMessage());
         }
     }
 
     @Override
     public void deposit(Account acc, float g, float s, float c) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deposit'");
+        String sql = "update checking set gold = ?, silver = ?, copper = ? where account_id = ?";
+        try(Connection connection = DatabaseConnector.createConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setFloat(1, acc.getGold() + g);
+            preparedStatement.setFloat(2, acc.getSilver() + s);
+            preparedStatement.setFloat(3, acc.getCopper() + c);
+            preparedStatement.setInt(4, acc.getAccountID());
+            ResultSet resultSet = preparedStatement.executeQuery();
+        } catch (SQLException e) {
+            throw new AccountSQLException(e.getMessage());
+        }
     }
 
     @Override
     public void withdraw(Account acc, float g, float s, float c) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'withdraw'");
+        String sql = "update checking set gold = ?, silver = ?, copper = ? where account_id = ?";
+        try(Connection connection = DatabaseConnector.createConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setFloat(1, acc.getGold() - g);
+            preparedStatement.setFloat(2, acc.getSilver() - s);
+            preparedStatement.setFloat(3, acc.getCopper() - c);
+            preparedStatement.setInt(4, acc.getAccountID());
+            ResultSet resultSet = preparedStatement.executeQuery();
+        } catch (SQLException e) {
+            throw new AccountSQLException(e.getMessage());
+        }
     }
 
     @Override
     public List<Account> getAllAccountsByUserID(int id) {
-        // TODO Auto-generated method stub
-        String sql = "select * from checking where user_id = ?";
+        String sql = "select * from checking where user_id = ?;";
         try(Connection connection = DatabaseConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
             List<Account> accounts = new ArrayList<>();
             while(resultSet.next()){
                 Account accountRecord = new Account();
@@ -140,15 +157,25 @@ public class SqliteAccountDao implements AccountDao{
                 accountRecord.setGold(resultSet.getFloat("gold"));
                 accountRecord.setSilver(resultSet.getFloat("silver"));
                 accountRecord.setCopper(resultSet.getFloat("copper"));
+                accountRecord.setAccountID(resultSet.getInt("account_id"));
                 accounts.add(accountRecord);
             }
             return accounts;
         } catch (SQLException e) {
-            // TODO: handle exception
             throw new AccountSQLException(e.getMessage());
         }
     }
 
-    
-    
+    @Override
+    public void deleteAccount(Account acc) {
+        String sql = "delete from checking where account_id = ?";
+        try(Connection connection = DatabaseConnector.createConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, acc.getAccountID());
+            ResultSet resultSet = preparedStatement.executeQuery();
+        } catch (SQLException e) {
+            throw new AccountSQLException(e.getMessage());
+        }
+    }
+ 
 }
