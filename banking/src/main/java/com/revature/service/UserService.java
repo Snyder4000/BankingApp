@@ -18,8 +18,16 @@ public class UserService {
             if(checkUsernameIsUnique(newUserCredentials)){
                 return userDao.createUser(newUserCredentials);
             }
+            else{
+                User user = new User();
+                return user;
+            }
         }
-        throw new RuntimeException("placeholder for custom exception");
+        else{
+            User user = new User();
+            return user;
+        }
+        //throw new RuntimeException("Username already exists!");
     }
 
     public User checkLoginCredentials(User credentials){

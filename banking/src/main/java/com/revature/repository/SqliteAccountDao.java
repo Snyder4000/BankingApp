@@ -11,7 +11,6 @@ public class SqliteAccountDao implements AccountDao{
 
     @Override
     public Account createCheckingAccount(Account newAccount) {
-        // TODO Auto-generated method stub
         String sql = "insert into checking(user_id, gold, silver, copper) values (?, ?, ?, ?)";
         try(Connection connection = DatabaseConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -31,7 +30,6 @@ public class SqliteAccountDao implements AccountDao{
 
     @Override
     public Account createSavingAccount(Account newAccount) {
-        // TODO Auto-generated method stub
         String sql = "insert into saving(user_id, gold, silver, copper) values (?, ?, ?, ?)";
         try(Connection connection = DatabaseConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -51,7 +49,6 @@ public class SqliteAccountDao implements AccountDao{
 
     @Override
     public Account createInvestmentAccount(Account newAccount) {
-        // TODO Auto-generated method stub
         String sql = "insert into investment(user_id, gold, silver, copper) values (?, ?, ?, ?)";
         try(Connection connection = DatabaseConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -71,7 +68,6 @@ public class SqliteAccountDao implements AccountDao{
     
     @Override
     public List<Account> getAllAccounts() {
-        // TODO Auto-generated method stub
         String sql = "select * from checking";
         try(Connection connection = DatabaseConnector.createConnection()){
             Statement statement = connection.createStatement();
@@ -88,15 +84,33 @@ public class SqliteAccountDao implements AccountDao{
             }
             return accounts;
         } catch (SQLException e) {
-            // TODO: handle exception
             throw new AccountSQLException(e.getMessage());
         }
         
     }
+    
+    @Override
+    public Account getCheckingAccountByID(int id) {
+        String sql = "select * from checking where account_id = ?";
+        try(Connection connection = DatabaseConnector.createConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Account accountRecord = new Account();
+            accountRecord.setUserId(resultSet.getInt("user_id"));
+            accountRecord.setGold(resultSet.getFloat("gold"));
+            accountRecord.setSilver(resultSet.getFloat("silver"));
+            accountRecord.setCopper(resultSet.getFloat("copper"));
+            accountRecord.setAccountID(resultSet.getInt("account_id"));
+            return accountRecord;
+        } catch (SQLException e) {
+            throw new AccountSQLException(e.getMessage());
+        }
+    }    
 
     @Override
-    public Account getAccountByID(int id) {
-        String sql = "select * from checking where account_id = ?";
+    public Account getSavingAccountByID(int id) {
+        String sql = "select * from saving where account_id = ?";
         try(Connection connection = DatabaseConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
@@ -114,7 +128,26 @@ public class SqliteAccountDao implements AccountDao{
     }
 
     @Override
-    public void deposit(Account acc, float g, float s, float c) {
+    public Account getInvestmentAccountByID(int id) {
+        String sql = "select * from investment where account_id = ?";
+        try(Connection connection = DatabaseConnector.createConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Account accountRecord = new Account();
+            accountRecord.setUserId(resultSet.getInt("user_id"));
+            accountRecord.setGold(resultSet.getFloat("gold"));
+            accountRecord.setSilver(resultSet.getFloat("silver"));
+            accountRecord.setCopper(resultSet.getFloat("copper"));
+            accountRecord.setAccountID(resultSet.getInt("account_id"));
+            return accountRecord;
+        } catch (SQLException e) {
+            throw new AccountSQLException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Account depositChecking(Account acc, float g, float s, float c) {
         String sql = "update checking set gold = ?, silver = ?, copper = ? where account_id = ?";
         try(Connection connection = DatabaseConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -122,14 +155,50 @@ public class SqliteAccountDao implements AccountDao{
             preparedStatement.setFloat(2, acc.getSilver() + s);
             preparedStatement.setFloat(3, acc.getCopper() + c);
             preparedStatement.setInt(4, acc.getAccountID());
-            ResultSet resultSet = preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
+            Account accountRecord = getCheckingAccountByID(acc.getAccountID());
+            return accountRecord;
         } catch (SQLException e) {
             throw new AccountSQLException(e.getMessage());
         }
     }
 
     @Override
-    public void withdraw(Account acc, float g, float s, float c) {
+    public Account depositSaving(Account acc, float g, float s, float c) {
+        String sql = "update saving set gold = ?, silver = ?, copper = ? where account_id = ?";
+        try(Connection connection = DatabaseConnector.createConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setFloat(1, acc.getGold() + g);
+            preparedStatement.setFloat(2, acc.getSilver() + s);
+            preparedStatement.setFloat(3, acc.getCopper() + c);
+            preparedStatement.setInt(4, acc.getAccountID());
+            preparedStatement.executeUpdate();
+            Account accountRecord = getSavingAccountByID(acc.getAccountID());
+            return accountRecord;
+        } catch (SQLException e) {
+            throw new AccountSQLException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Account depositInvestment(Account acc, float g, float s, float c) {
+        String sql = "update investment set gold = ?, silver = ?, copper = ? where account_id = ?";
+        try(Connection connection = DatabaseConnector.createConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setFloat(1, acc.getGold() + g);
+            preparedStatement.setFloat(2, acc.getSilver() + s);
+            preparedStatement.setFloat(3, acc.getCopper() + c);
+            preparedStatement.setInt(4, acc.getAccountID());
+            preparedStatement.executeUpdate();
+            Account accountRecord = getInvestmentAccountByID(acc.getAccountID());
+            return accountRecord;
+        } catch (SQLException e) {
+            throw new AccountSQLException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Account withdrawChecking(Account acc, float g, float s, float c) {
         String sql = "update checking set gold = ?, silver = ?, copper = ? where account_id = ?";
         try(Connection connection = DatabaseConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -137,14 +206,50 @@ public class SqliteAccountDao implements AccountDao{
             preparedStatement.setFloat(2, acc.getSilver() - s);
             preparedStatement.setFloat(3, acc.getCopper() - c);
             preparedStatement.setInt(4, acc.getAccountID());
-            ResultSet resultSet = preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
+            Account accountRecord = getCheckingAccountByID(acc.getAccountID());    
+            return accountRecord;
         } catch (SQLException e) {
             throw new AccountSQLException(e.getMessage());
         }
     }
 
     @Override
-    public List<Account> getAllAccountsByUserID(int id) {
+    public Account withdrawSaving(Account acc, float g, float s, float c) {
+        String sql = "update saving set gold = ?, silver = ?, copper = ? where account_id = ?";
+        try(Connection connection = DatabaseConnector.createConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setFloat(1, acc.getGold() - g);
+            preparedStatement.setFloat(2, acc.getSilver() - s);
+            preparedStatement.setFloat(3, acc.getCopper() - c);
+            preparedStatement.setInt(4, acc.getAccountID());
+            preparedStatement.executeUpdate();
+            Account accountRecord = getSavingAccountByID(acc.getAccountID());    
+            return accountRecord;
+        } catch (SQLException e) {
+            throw new AccountSQLException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Account withdrawInvestment(Account acc, float g, float s, float c) {
+        String sql = "update investment set gold = ?, silver = ?, copper = ? where account_id = ?";
+        try(Connection connection = DatabaseConnector.createConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setFloat(1, acc.getGold() - g);
+            preparedStatement.setFloat(2, acc.getSilver() - s);
+            preparedStatement.setFloat(3, acc.getCopper() - c);
+            preparedStatement.setInt(4, acc.getAccountID());
+            preparedStatement.executeUpdate();
+            Account accountRecord = getInvestmentAccountByID(acc.getAccountID());    
+            return accountRecord;
+        } catch (SQLException e) {
+            throw new AccountSQLException(e.getMessage());
+        }
+    }
+    
+    @Override
+    public List<Account> getAllCheckingAccountsByUserID(int id) {
         String sql = "select * from checking where user_id = ?;";
         try(Connection connection = DatabaseConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -167,12 +272,82 @@ public class SqliteAccountDao implements AccountDao{
     }
 
     @Override
-    public void deleteAccount(Account acc) {
+    public List<Account> getAllSavingAccountsByUserID(int id) {
+        String sql = "select * from saving where user_id = ?;";
+        try(Connection connection = DatabaseConnector.createConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Account> accounts = new ArrayList<>();
+            while(resultSet.next()){
+                Account accountRecord = new Account();
+                accountRecord.setUserId(resultSet.getInt("user_id"));
+                accountRecord.setGold(resultSet.getFloat("gold"));
+                accountRecord.setSilver(resultSet.getFloat("silver"));
+                accountRecord.setCopper(resultSet.getFloat("copper"));
+                accountRecord.setAccountID(resultSet.getInt("account_id"));
+                accounts.add(accountRecord);
+            }
+            return accounts;
+        } catch (SQLException e) {
+            throw new AccountSQLException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Account> getAllInvestmentAccountsByUserID(int id) {
+        String sql = "select * from investment where user_id = ?;";
+        try(Connection connection = DatabaseConnector.createConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Account> accounts = new ArrayList<>();
+            while(resultSet.next()){
+                Account accountRecord = new Account();
+                accountRecord.setUserId(resultSet.getInt("user_id"));
+                accountRecord.setGold(resultSet.getFloat("gold"));
+                accountRecord.setSilver(resultSet.getFloat("silver"));
+                accountRecord.setCopper(resultSet.getFloat("copper"));
+                accountRecord.setAccountID(resultSet.getInt("account_id"));
+                accounts.add(accountRecord);
+            }
+            return accounts;
+        } catch (SQLException e) {
+            throw new AccountSQLException(e.getMessage());
+        }
+    }    
+   
+    @Override
+    public void deleteCheckingAccount(Account acc) {
         String sql = "delete from checking where account_id = ?";
         try(Connection connection = DatabaseConnector.createConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, acc.getAccountID());
-            ResultSet resultSet = preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new AccountSQLException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteSavingAccount(Account acc) {
+        String sql = "delete from saving where account_id = ?";
+        try(Connection connection = DatabaseConnector.createConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, acc.getAccountID());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new AccountSQLException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteInvestmentAccount(Account acc) {
+        String sql = "delete from investment where account_id = ?";
+        try(Connection connection = DatabaseConnector.createConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, acc.getAccountID());
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new AccountSQLException(e.getMessage());
         }

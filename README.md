@@ -29,5 +29,5 @@ For your Pep Supplemental project your goal is to create a terminal based Bankin
 - Data persisted in an SQL database
 
 ## Stretch Goals
-- create new account types with different benefits
-- implement joint account ownership
+- 1) create new account types with different benefits
+- 2) implement joint account ownership

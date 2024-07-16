@@ -35,6 +35,9 @@ public class UserController {
                 case "q":
                     System.out.println("Goodbye!");
                     controlMap.put("Continue Loop", "false");
+                    break;
+                default:
+                    System.out.println("INVAILD INPUT! Please input a selection option.");
             }
         } catch(LoginFail exception){
             System.out.println(exception.getMessage());
@@ -46,7 +49,12 @@ public class UserController {
     public void registerNewUser(){
         User newCredentials = getUserCredentials();
         User newUser = userService.validateNewCredentials(newCredentials);
-        System.out.printf("New account created: %s", newUser);
+        if(newUser.getUsername() != null){
+            System.out.printf("New account created: %s", newUser);
+        }
+        else{
+            System.out.println("The Username already exists!");
+        }
     }
 
     public User login(){

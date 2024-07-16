@@ -8,9 +8,19 @@ public interface AccountDao {
     Account createSavingAccount(Account newAccount);
     Account createInvestmentAccount(Account newAccount);
     List<Account> getAllAccounts();
-    Account getAccountByID(int id);
-    List<Account> getAllAccountsByUserID(int id);
-    public void deposit(Account acc, float g, float s, float c);
-    public void withdraw(Account acc, float g, float s, float c);
-    public void deleteAccount(Account acc); 
+    Account getCheckingAccountByID(int id);
+    Account getSavingAccountByID(int id);
+    Account getInvestmentAccountByID(int id);
+    List<Account> getAllCheckingAccountsByUserID(int id);
+    List<Account> getAllSavingAccountsByUserID(int id);
+    List<Account> getAllInvestmentAccountsByUserID(int id);
+    public Account depositChecking(Account acc, float g, float s, float c);
+    public Account depositSaving(Account acc, float g, float s, float c);
+    public Account depositInvestment(Account acc, float g, float s, float c);
+    public Account withdrawChecking(Account acc, float g, float s, float c);
+    public Account withdrawSaving(Account acc, float g, float s, float c);
+    public Account withdrawInvestment(Account acc, float g, float s, float c);
+    public void deleteCheckingAccount(Account acc);
+    public void deleteSavingAccount(Account acc); 
+    public void deleteInvestmentAccount(Account acc);  
 }
