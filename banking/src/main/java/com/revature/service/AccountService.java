@@ -30,10 +30,13 @@ public class AccountService {
         switch(type){
             case 1:
                 accounts = accountDao.getAllCheckingAccountsByUserID(id);
+                break;
             case 2:
                 accounts = accountDao.getAllSavingAccountsByUserID(id);
+                break;
             case 3:
                 accounts = accountDao.getAllInvestmentAccountsByUserID(id);
+                break;
         }
         return accounts;
     }
@@ -43,10 +46,13 @@ public class AccountService {
         switch(type){
             case 1:
                 acc = accountDao.getCheckingAccountByID(id);
+                break;
             case 2:
                 acc = accountDao.getSavingAccountByID(id);
+                break;
             case 3:
                 acc = accountDao.getInvestmentAccountByID(id);
+                break;
         }
         return acc;
     } 
@@ -61,12 +67,15 @@ public class AccountService {
             case 1:
                 acc = accountDao.getCheckingAccountByID(id);
                 acc = accountDao.depositChecking(acc, g, s, c);
+                break;
             case 2:
                 acc = accountDao.getSavingAccountByID(id);
                 acc = accountDao.depositSaving(acc, g, s, c);
+                break;
             case 3:
                 acc = accountDao.getInvestmentAccountByID(id);
                 acc = accountDao.depositInvestment(acc, g, s, c);
+                break;
         }
         return acc;
     }
@@ -77,12 +86,15 @@ public class AccountService {
             case 1:
                 acc = accountDao.getCheckingAccountByID(id);
                 acc = accountDao.withdrawChecking(acc, g, s, c);
+                break;
             case 2:
                 acc = accountDao.getSavingAccountByID(id);
                 acc = accountDao.withdrawSaving(acc, g, s, c);
+                break;
             case 3:
                 acc = accountDao.getInvestmentAccountByID(id);
                 acc = accountDao.withdrawInvestment(acc, g, s, c);
+                break;
         }
         return acc;
     }
@@ -93,12 +105,15 @@ public class AccountService {
             case 1:
                 acc = accountDao.getCheckingAccountByID(id);
                 accountDao.deleteCheckingAccount(acc);
+                break;
             case 2:
                 acc = accountDao.getSavingAccountByID(id);
                 accountDao.deleteSavingAccount(acc);
+                break;
             case 3:
                 acc = accountDao.getInvestmentAccountByID(id);
                 accountDao.deleteInvestmentAccount(acc);
+                break;
         }
     }
 
